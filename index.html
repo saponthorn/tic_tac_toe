@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript"
+        src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=xVb9EzF70V5fv1a52TnpFqBbPQEDpzIPtIjduhqiwsTNu7hTPwYjN5-mYurrkx780Dz_BQ8ge5wMBFvFnOBo3-gbQW1l2iTCEcYWkdtKiTKqYpBqvSnr7MDQBcrY2tc5RWbbtQdn985pIU3qpgLz6RfEHchpYt1vM8nz1N2wxy5Sh4jYYunbRK_99Z_g0GPNEvebKn0gZ_qKSUGJZMQISO-O3Uv5q2Q7NcPSMa9TMNQaeHX8y1qMkAdJ9BCSNy45rvUJz4nDmT8FoSndeeu31XzcCvTg5t2uV3TtLquUrfg21gC3Fhp-R3pQ36wVAeLvhOvR5Bi8Hp5Gleu-MnoM_DuTcLFJTR2OhLP6eTt57YPD6Mck0r-I3krQBtEz52PCo9IXs6eSKQv1nW_yMqMJFQRZElb1vRB-4h5R-hgMEYNLoXrxZuXEW6vkeX5HJ5jD2ffBmsCJoiVR_ugHTsbqbm_xd2yV1U3zlKZR8pGkVVuUExWq7nP6zI9TPdmVLVynWhtf6UGmXFeZO-zfECqcjC0LAVypsTcqdXXLP3aQ_Qw"
+        charset="UTF-8"></script>
+        <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="board">
+        <button onclick="clickPlay(0)" id="0" class="btn"></button>
+        <button onclick="clickPlay(1)" id="1" class="btn"></button>
+        <button onclick="clickPlay(2)" id="2" class="btn"></button>
+        <button onclick="clickPlay(3)" id="3" class="btn"></button>
+        <button onclick="clickPlay(4)" id="4" class="btn"></button>
+        <button onclick="clickPlay(5)" id="5" class="btn"></button>
+        <button onclick="clickPlay(6)" id="6" class="btn"></button>
+        <button onclick="clickPlay(7)" id="7" class="btn"></button>
+        <button onclick="clickPlay(8)" id="8" class="btn"></button>
+    </div>
+    <div class="otherText">
+        <h1 id="whoWin">X Turn</h1>
+        <button id="reset" onclick="reset()" hidden class="newGame">New Game</button>
+    </div>
+    <script>
+        let turn = "X"
+        let board = [null, null, null, null, null, null, null, null, null]
+
+        const checkWin = () => {
+            const winPatten = [[0, 1, 2], [0, 3, 6], [3, 4, 5], [6, 7, 8], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
+            return winPatten.some((arr) => {
+                return arr.every((index => {
+                    return board[index] == turn
+                }))
+            })
+        }
+
+        const clickPlay = (index) => {
+            const currentPlay = document.getElementById(index)
+            if (board[index]) {
+                return
+            }
+            currentPlay.textContent = turn
+            currentPlay.disabled = true
+            board[index] = turn
+            const winTxt = document.getElementById("whoWin")
+            if (checkWin()) {
+                winTxt.textContent = `${turn} is winer`
+                winTxt.style.color = "rgb(254, 255, 184)"
+                document.querySelectorAll(".btn").forEach(arr => {
+                    arr.disabled = true
+                });
+                document.getElementById("reset").hidden = false
+                return
+            }
+            if (isDraw()) {
+                winTxt.textContent = "Draw"
+                winTxt.style.color = "rgb(156, 156, 156)"
+                document.getElementById("reset").hidden = false
+                return
+            }
+            turn = turn == "X" ? "O" : "X"
+            winTxt.textContent = `${turn} Turn`
+        }
+        const reset = () => {
+            location.reload()
+
+        }
+        const isDraw = () => {
+            return board.every(index => index)
+        }
+
+    </script>
+</body>
+
+</html>
