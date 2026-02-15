@@ -30,6 +30,9 @@
     <script>
         let turn = "X"
         let board = [null, null, null, null, null, null, null, null, null]
+        let isGameEnd = false
+        let canPlay = true
+        const winTxt = document.getElementById("whoWin")
 
         const checkWin = () => {
             const winPatten = [[0, 1, 2], [0, 3, 6], [3, 4, 5], [6, 7, 8], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
@@ -41,14 +44,25 @@
         }
 
         const clickPlay = (index) => {
-            const currentPlay = document.getElementById(index)
+            if(!canPlay){ return}
             if (board[index]) {
                 return
             }
+            canPlay = false
+            playProcess(index)
+            if(isGameEnd){ 
+                canPlay = true
+                return }
+            setTimeout(comPlay,400)
+        }
+
+        const playProcess = (index) => {
+            const currentPlay = document.getElementById(index)
+            const newclass = turn == "X" ? "x" : "o"
+            currentPlay.classList.add(newclass)
             currentPlay.textContent = turn
             currentPlay.disabled = true
             board[index] = turn
-            const winTxt = document.getElementById("whoWin")
             if (checkWin()) {
                 winTxt.textContent = `${turn} is winer`
                 winTxt.style.color = "rgb(254, 255, 184)"
@@ -56,23 +70,53 @@
                     arr.disabled = true
                 });
                 document.getElementById("reset").hidden = false
-                return
+                isGameEnd = true
+                return 
             }
             if (isDraw()) {
                 winTxt.textContent = "Draw"
                 winTxt.style.color = "rgb(156, 156, 156)"
                 document.getElementById("reset").hidden = false
-                return
+                isGameEnd = true
+                return true
             }
             turn = turn == "X" ? "O" : "X"
             winTxt.textContent = `${turn} Turn`
         }
-        const reset = () => {
-            location.reload()
 
+        const reset = () => {
+            board = [null, null, null, null, null, null, null, null, null]
+            winTxt.textContent = "X Turn"
+            winTxt.style.color = "white"
+            document.querySelectorAll(".btn").forEach((ele) => {
+                ele.setAttribute("class", "btn")
+                ele.textContent = null
+                ele.disabled = false
+            })
+            isGameEnd = false
+            turn = "X"
+            document.getElementById("reset").hidden = true
         }
         const isDraw = () => {
             return board.every(index => index)
+        }
+
+        const computerRandom = () => {
+            let randomIndex = Math.floor(Math.random() * 9);
+            if(isDraw()){
+                return
+            }
+            while(board[randomIndex]){
+                randomIndex = Math.floor(Math.random() * 9);
+            }
+            return randomIndex
+        }
+
+        const comPlay = () => {
+            const index = computerRandom()
+            playProcess(index)
+            setTimeout(() => {canPlay = true},300)
+            
         }
 
     </script>

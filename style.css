@@ -17,6 +17,7 @@
      background-color: black;
      border: none;
      font-size: 5rem;
+     font-weight: 700;
  }
 
  .board {
@@ -26,10 +27,6 @@
      gap: 0.5vh;
      background-color: white;
      margin-top: 3rem;
- }
-
- .btn:disabled {
-     color: white;
  }
  .newGame {
     margin-top: 2rem;
@@ -49,4 +46,23 @@
  .otherText {
     width: 30rem;
     text-align: center;
+ }
+
+ .x {
+    color: rgb(255, 61, 87);
+ }
+ .o {
+    color:  rgb(83, 221, 255);
+ }
+
+ .x , .o {
+    animation: open 0.4s;
+ }
+ @keyframes open {
+    from {
+        font-size: 0;
+    }
+    to {
+        font-size: 5rem;
+    }
  }
