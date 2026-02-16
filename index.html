@@ -12,6 +12,11 @@
 </head>
 
 <body>
+    <div class="propUp">
+        <h1>Choose Difficulty</h1>
+        <button class="newGame dif" id="easy">Easy</button>
+        <button class="newGame dif" id="hard">Hard</button>
+    </div>
     <div class="board">
         <button onclick="clickPlay(0)" id="0" class="btn"></button>
         <button onclick="clickPlay(1)" id="1" class="btn"></button>
@@ -28,14 +33,45 @@
         <button id="reset" onclick="reset()" hidden class="newGame">New Game</button>
     </div>
     <script>
+        let difficulty = null
         let turn = "X"
         let board = [null, null, null, null, null, null, null, null, null]
         let isGameEnd = false
         let canPlay = true
         const winTxt = document.getElementById("whoWin")
+        const winPatten = [[0, 1, 2], [0, 3, 6], [3, 4, 5], [6, 7, 8], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
+        
+        const difficultyBtns = document.querySelectorAll(".dif")
+        const propUp = document.querySelector(".propUp")
+
+        difficultyBtns.forEach((btn) => {
+            btn.addEventListener("click",() => {
+                difficulty = btn.textContent.toLowerCase()
+                console.log(difficulty)
+                propUp.style.display = "none"
+            })
+        })
+
+        const clickPlay = (index) => {
+            if(!canPlay){ return}
+            
+            canPlay = false
+            playProcess(index)
+            if(isGameEnd){ 
+                canPlay = true
+                return 
+            }
+            if(difficulty === "easy"){
+                setTimeout(comPlay,400)
+            }
+            else if(difficulty === "hard"){
+                setTimeout(computerHard,400)   
+            }
+            
+            setTimeout(() => {canPlay = true},300)
+        }
 
         const checkWin = () => {
-            const winPatten = [[0, 1, 2], [0, 3, 6], [3, 4, 5], [6, 7, 8], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
             return winPatten.some((arr) => {
                 return arr.every((index => {
                     return board[index] == turn
@@ -43,20 +79,11 @@
             })
         }
 
-        const clickPlay = (index) => {
-            if(!canPlay){ return}
-            if (board[index]) {
-                return
-            }
-            canPlay = false
-            playProcess(index)
-            if(isGameEnd){ 
-                canPlay = true
-                return }
-            setTimeout(comPlay,400)
-        }
-
         const playProcess = (index) => {
+            if (board[index]) {
+                throw new Error("cannot replace")
+                return false
+            }
             const currentPlay = document.getElementById(index)
             const newclass = turn == "X" ? "x" : "o"
             currentPlay.classList.add(newclass)
@@ -96,6 +123,7 @@
             isGameEnd = false
             turn = "X"
             document.getElementById("reset").hidden = true
+            propUp.style.display = "flex"
         }
         const isDraw = () => {
             return board.every(index => index)
@@ -114,9 +142,56 @@
 
         const comPlay = () => {
             const index = computerRandom()
-            playProcess(index)
-            setTimeout(() => {canPlay = true},300)
-            
+            playProcess(index)          
+        }
+
+        const findWayToWin = (play) => {
+            let result = null
+            winPatten.forEach((arr) => {
+                const wayWinArr = arr.filter((index) => {
+                    return board[index] == play
+                })
+                if(wayWinArr.length == 2){
+                    const newIndex = arr.filter((index) => {
+                        if(!board[index]){
+                            return true
+                        }
+                    })
+                    result = newIndex[0] || result
+                }
+            })
+            return result
+        }
+
+        const computerHard = () => {
+            if(board.join("") === "X"){
+                try{
+                    playProcess(4)
+                    return
+                }
+                catch{
+                    const edge = [0,2,6,8]
+                    const randomNum = Math.floor(Math.random() * 4)
+                    playProcess(edge[randomNum])
+                    return
+                }
+            }
+            if(findWayToWin("O") !== null){
+                playProcess(findWayToWin("O"))
+            }
+            else if(findWayToWin("X")){
+                playProcess(findWayToWin("X"))
+            }
+            else if(board.join("").length === 3){
+                const centerLine = [1,3,5,7]
+                const emptArea = centerLine.filter((index) => {return !board[index]})
+                const randomLineNum = Math.floor(Math.random() * emptArea.length)
+                console.log(randomLineNum)
+                playProcess(emptArea[randomLineNum])
+            }
+            else{
+                playProcess(computerRandom())
+            }
         }
 
     </script>
