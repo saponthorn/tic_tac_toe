@@ -157,7 +157,7 @@
                             return true
                         }
                     })
-                    result = newIndex[0] || result
+                    result = newIndex[0] != null ? newIndex[0] : result
                 }
             })
             return result
@@ -176,10 +176,10 @@
                     return
                 }
             }
-            if(findWayToWin("O") || findWayToWin("O") == 0){
+            if(findWayToWin("O") != null){
                 playProcess(findWayToWin("O"))
             }
-            else if(findWayToWin("X") || findWayToWin("X") == 0){
+            else if(findWayToWin("X") != null){
                 playProcess(findWayToWin("X"))
             }
             else if(board.join("").length === 3){
