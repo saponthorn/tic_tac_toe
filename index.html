@@ -179,17 +179,14 @@
             if(findWayToWin("O") != null){
                 playProcess(findWayToWin("O"))
             }
-<<<<<<< HEAD
             else if(findWayToWin("X" != null)){
-=======
-            else if(findWayToWin("X") != null){
->>>>>>> 2dd3269ca8d97712ccb61ffa0609eab118fb7306
                 playProcess(findWayToWin("X"))
             }
             else if(board.join("").length === 3){
                 const centerLine = [1,3,5,7]
                 const emptArea = centerLine.filter((index) => {return !board[index]})
                 const randomLineNum = Math.floor(Math.random() * emptArea.length)
+                console.log(randomLineNum)
                 playProcess(emptArea[randomLineNum])
             }
             else{
