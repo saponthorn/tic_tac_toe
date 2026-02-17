@@ -176,10 +176,10 @@
                     return
                 }
             }
-            if(findWayToWin("O") != null){
+            if(findWayToWin("O") || findWayToWin("O") == 0){
                 playProcess(findWayToWin("O"))
             }
-            else if(findWayToWin("X") != null){
+            else if(findWayToWin("X") || findWayToWin("X") == 0){
                 playProcess(findWayToWin("X"))
             }
             else if(board.join("").length === 3){
